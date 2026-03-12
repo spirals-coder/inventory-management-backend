@@ -10,11 +10,10 @@ const errorHandler = require('./middleware/errorHandler');
 connectDB();
 
 const app = express();
-
 app.use(express.json());
 
 app.get('/', (req, res) => {
-  res.json({
+  res.status(200).json({
     message: 'Inventory Management API is running!',
     endpoints: {
       addProduct:        'POST   /products',
@@ -28,11 +27,14 @@ app.get('/', (req, res) => {
   });
 });
 
-app.use('/products', productRoutes);
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'OK' });
+});
 
+app.use('/products', productRoutes);
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
 });
